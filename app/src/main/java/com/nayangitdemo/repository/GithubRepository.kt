@@ -6,6 +6,6 @@ import com.nayangitdemo.model.RepositoryDetails
 import io.reactivex.Single
 
 interface GithubRepository {
-    fun getGitHubPoplularRepoList(): Single<PopularGitRepo>
+    fun getGitHubPoplularRepoList(pageNum:String): Single<PopularGitRepo>
     fun getGitHubPoplularRepoDetail(userName: String): Single<RepositoryDetails>
 }

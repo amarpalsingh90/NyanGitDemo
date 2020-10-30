@@ -37,9 +37,19 @@ abstract class AbstractPopRepoFragment : BaseFragment() {
         viewModel.populargitRepo.observe(viewLifecycleOwner, EventObserver {
             setPopularGitData(it)
         })
+        viewModel.populargitRepoLoadMore.observe(viewLifecycleOwner, EventObserver {
+            setPopularGitMoreData(it)
+        })
+
+
     }
 
 
     abstract fun setPopularGitData(popularGitRepo: PopularGitRepo)
+    abstract fun setPopularGitMoreData(popularGitRepo: PopularGitRepo)
+
+    protected fun getMorePopdata(pageNum: String) {
+        viewModel.fetchGitHubPoplularRepoListMore(pageNum)
+    }
 
 }

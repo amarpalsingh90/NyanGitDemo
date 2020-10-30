@@ -12,7 +12,10 @@ import com.nayangitdemo.model.Item
 import kotlinx.android.synthetic.main.pop_repo_row_item.view.*
 
 
-class PopularGitRepoAdapter(private val items: List<Item>, private val listener: IAdapterCallback) :
+class PopularGitRepoAdapter(
+    private var items: MutableList<Item>,
+    private val listener: IAdapterCallback
+) :
     RecyclerView.Adapter<PopularGitRepoAdapter.IssueViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = IssueViewHolder(
@@ -25,6 +28,20 @@ class PopularGitRepoAdapter(private val items: List<Item>, private val listener:
 
     override fun onBindViewHolder(holder: IssueViewHolder, position: Int) {
         holder.bind(items[position])
+    }
+
+    fun swapData(list: List<Item>) {
+        if (!items.isEmpty()) {
+            items.clear()
+        }
+        items.addAll(list)
+        notifyDataSetChanged()
+    }
+
+    fun appendData(list: List<Item>) {
+        val previousSize: Int = items.size
+        items.addAll(list)
+        notifyItemRangeInserted(previousSize, items.size)
     }
 
     inner class IssueViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {

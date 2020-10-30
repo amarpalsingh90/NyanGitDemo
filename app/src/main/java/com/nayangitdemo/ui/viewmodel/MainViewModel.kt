@@ -3,6 +3,7 @@ package com.nayangitdemo.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.nayangitdemo.api.ApiConstant
 import com.nayangitdemo.common.Event
 import com.nayangitdemo.common.RxScheduler
 import com.nayangitdemo.model.PopularGitRepo
@@ -24,6 +25,11 @@ class MainViewModel @Inject constructor(
     private val _repoDetailsData by lazy { MutableLiveData<Event<RepositoryDetails>>() }
     val repoDetailsData: LiveData<Event<RepositoryDetails>> by lazy { _repoDetailsData }
 
+
+    private val _populargitRepoLoadMore by lazy { MutableLiveData<Event<PopularGitRepo>>() }
+    val populargitRepoLoadMore: LiveData<Event<PopularGitRepo>> by lazy { _populargitRepoLoadMore }
+
+
     var loadingState = MutableLiveData<Boolean>()
 
     private val _apiError by lazy { MutableLiveData<Event<Throwable>>() }
@@ -33,14 +39,30 @@ class MainViewModel @Inject constructor(
 
 
     fun fetchGitHubPoplularRepoList() {
-        val issueDisposable = githubRepository.getGitHubPoplularRepoList()
+        val issueDisposable =
+            githubRepository.getGitHubPoplularRepoList(ApiConstant.STARTING_OFFSET)
+                .subscribeOn(scheduler.io)
+                .observeOn(scheduler.main)
+                .doOnSubscribe { loadingState.value = true }
+                .doOnEvent { _, _ -> loadingState.value = false }
+                .doOnError { loadingState.value = false }
+                .subscribe(
+                    { Event(it).run(_populargitRepo::postValue) },
+                    { Event(it).run(_apiError::postValue) }
+                )
+        disposable.add(issueDisposable)
+    }
+
+
+    fun fetchGitHubPoplularRepoListMore(pageNum: String) {
+        val issueDisposable = githubRepository.getGitHubPoplularRepoList(pageNum)
             .subscribeOn(scheduler.io)
             .observeOn(scheduler.main)
             .doOnSubscribe { loadingState.value = true }
             .doOnEvent { _, _ -> loadingState.value = false }
             .doOnError { loadingState.value = false }
             .subscribe(
-                { Event(it).run(_populargitRepo::postValue) },
+                { Event(it).run(_populargitRepoLoadMore::postValue) },
                 { Event(it).run(_apiError::postValue) }
             )
         disposable.add(issueDisposable)

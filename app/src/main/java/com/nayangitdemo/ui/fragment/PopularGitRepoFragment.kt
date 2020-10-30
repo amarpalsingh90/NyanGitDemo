@@ -9,7 +9,7 @@ import com.nayangitdemo.callback.IFragmentChangeCallback
 import com.nayangitdemo.model.Item
 import com.nayangitdemo.model.PopularGitRepo
 import com.nayangitdemo.ui.adapter.PopularGitRepoAdapter
-import com.nayangitdemo.ui.fragment.AbstractRepoDetailFragment.Companion.REPO_DESCRIPTION
+import com.nayangitdemo.util.EndlessScrollListener
 import kotlinx.android.synthetic.main.fragment_pop_repo_layout.*
 
 
@@ -22,7 +22,20 @@ class PopularGitRepoFragment : AbstractPopRepoFragment(), IAdapterCallback {
         }
     }
 
+    private val linearLayoutManager: LinearLayoutManager by lazy {
+        LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+    }
+
+
+    private val endlessScrollListener = object : EndlessScrollListener(linearLayoutManager) {
+        override fun onLoadMore(currentPage: Int, totalItemCount: Int) {
+            getMorePopdata("$currentPage")
+
+        }
+    }
+
     private lateinit var fragmentChangeListener: IFragmentChangeCallback
+
     private val popularGitRepoList by lazy { ArrayList<Item>() }
     private val popularGitRepoAdapter by lazy {
         PopularGitRepoAdapter(popularGitRepoList, this)
@@ -42,24 +55,28 @@ class PopularGitRepoFragment : AbstractPopRepoFragment(), IAdapterCallback {
 
     private fun initAdapter() {
         with(parent_recycler) {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            layoutManager = linearLayoutManager
             adapter = popularGitRepoAdapter
+            addOnScrollListener(endlessScrollListener)
         }
     }
 
     override fun setPopularGitData(popularGitRepo: PopularGitRepo) {
-        popularGitRepoList.addAll(popularGitRepo.items)
-        with(popularGitRepoAdapter) {
-            notifyDataSetChanged()
-        }
+        popularGitRepoAdapter.swapData(popularGitRepo.items)
+    }
+
+    override fun setPopularGitMoreData(popularGitRepo: PopularGitRepo) {
+        popularGitRepoAdapter.appendData(popularGitRepo.items)
     }
 
     override fun showLoadingState(loading: Boolean) {
-        if (loading)
+        if (loading) {
             shimmer_view_container.startShimmerAnimation()
-        else {
+            progress.visibility = View.VISIBLE
+        } else {
             shimmer_view_container.stopShimmerAnimation()
             shimmer_view_container.visibility = View.GONE
+            progress.visibility = View.GONE
         }
     }
 
@@ -68,11 +85,12 @@ class PopularGitRepoFragment : AbstractPopRepoFragment(), IAdapterCallback {
     }
 
 
-    override fun onRepoDetailClick(descriptio:String,userName: String) {
+    override fun onRepoDetailClick(descriptio: String, userName: String) {
         fragmentChangeListener.onFragmentChange(
-            RepoDetailFragment.getInstance(descriptio,userName),
+            RepoDetailFragment.getInstance(descriptio, userName),
             RepoDetailFragment.TAG
         )
     }
+
 
 }

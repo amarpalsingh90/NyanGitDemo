@@ -1,40 +1,25 @@
 package com.nayangitdemo.util
 
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
-abstract class EndlessScrollListener(layoutManager: RecyclerView.LayoutManager) : RecyclerView.OnScrollListener() {
+abstract class EndlessScrollListener(layoutManager: LinearLayoutManager) :
+    RecyclerView.OnScrollListener() {
 
-    private var previousTotal = 0 // The total number of items in the dataset after the last load
-    private var loading = true // True if we are still waiting for the last set of data to load.
-    private val visibleThreshold = 5 // The minimum amount of items to have below your current scroll position before loading more.
+    private var previousTotal = 0
+    private var loading = true
+    private val visibleThreshold = 5
     private var firstVisibleItem: Int = 0
     private var visibleItemCount: Int = 0
     private var totalItemCount: Int = 0
-
     private var startPageNumber = 0
     var currentPage = 0
-
     private var scrollPosition = 0
+    private var linearLayoutManager: LinearLayoutManager
 
-    private var linearLayoutManager: LinearLayoutManager? = null
-    private var gridLayoutManager: GridLayoutManager? = null
-    private var staggeredGridLayoutManager: StaggeredGridLayoutManager? = null
-
-    private var spanArray: IntArray? = null
 
     init {
-        when (layoutManager) {
-            is GridLayoutManager -> this.gridLayoutManager = layoutManager
-            is LinearLayoutManager -> this.linearLayoutManager = layoutManager
-            is StaggeredGridLayoutManager -> {
-                this.staggeredGridLayoutManager = layoutManager
-                spanArray = IntArray(staggeredGridLayoutManager!!.spanCount)
-            }
-            else -> throw IllegalArgumentException("Selected LayoutManager has not supported")
-        }
+        this.linearLayoutManager = layoutManager
     }
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -50,18 +35,11 @@ abstract class EndlessScrollListener(layoutManager: RecyclerView.LayoutManager) 
                 totalItemCount = linearLayoutManager!!.itemCount
                 firstVisibleItem = linearLayoutManager!!.findFirstVisibleItemPosition()
             }
-            gridLayoutManager != null -> {
-                totalItemCount = gridLayoutManager!!.itemCount
-                firstVisibleItem = gridLayoutManager!!.findFirstVisibleItemPosition()
-            }
-            staggeredGridLayoutManager != null -> {
-                totalItemCount = staggeredGridLayoutManager!!.itemCount
-                firstVisibleItem = staggeredGridLayoutManager!!.findFirstVisibleItemPositions(spanArray)[0]
-            }
+
         }
 
         scrollPosition = recyclerView.computeVerticalScrollOffset()
-        onScroll(firstVisibleItem, dy, scrollPosition)
+
 
         if (loading) {
             if (totalItemCount > previousTotal) {
@@ -94,7 +72,7 @@ abstract class EndlessScrollListener(layoutManager: RecyclerView.LayoutManager) 
     }
 
     abstract fun onLoadMore(currentPage: Int, totalItemCount: Int)
-    abstract fun onScroll(firstVisibleItem: Int, dy: Int, scrollPosition: Int)
+
 
     companion object {
         var TAG = EndlessScrollListener::class.java.simpleName

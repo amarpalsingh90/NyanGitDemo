@@ -6,11 +6,12 @@ import com.nayangitdemo.model.RepositoryDetails
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface GithubApi {
 
-    @GET("search/repositories?q=language=android&sort=stars&page=1")
-    fun getGitHubPoplularRepoList(): Single<PopularGitRepo>
+    @GET("search/repositories?q=language=android&sort=stars")
+    fun getGitHubPoplularRepoList(@Query("page") pageNum: String): Single<PopularGitRepo>
 
 
     @GET("users/{userName}")
