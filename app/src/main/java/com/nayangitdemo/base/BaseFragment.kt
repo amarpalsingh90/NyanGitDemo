@@ -1,4 +1,4 @@
-package com.example.githubfirebaseissue.base
+package com.nayangitdemo.base
 
 import android.app.Dialog
 import android.os.Bundle

@@ -1,5 +1,5 @@
 package com.nayangitdemo.callback
 
 interface IAdapterCallback {
-    fun onRepoDetailClick(number: Int)
+    fun onRepoDetailClick(descriptio:String,userName: String)
 }

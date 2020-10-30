@@ -1,4 +1,4 @@
-package com.example.githubfirebaseissue.base
+package com.nayangitdemo.base
 
 import android.os.Bundle
 import dagger.android.AndroidInjection
