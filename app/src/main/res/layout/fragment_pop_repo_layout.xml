@@ -6,6 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/parent_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:itemCount="10"
+        tools:listitem="@layout/pop_repo_row_item" />
+
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer_view_container"
         android:layout_width="match_parent"
@@ -14,7 +26,7 @@
         android:layout_marginTop="@dimen/margin_8"
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/parent_recycler"
         shimmer:duration="800">
 
         <LinearLayout
@@ -23,31 +35,27 @@
             android:orientation="vertical">
 
             <include layout="@layout/data_placeholder_layout" />
+
             <include layout="@layout/data_placeholder_layout" />
+
             <include layout="@layout/data_placeholder_layout" />
+
             <include layout="@layout/data_placeholder_layout" />
+
             <include layout="@layout/data_placeholder_layout" />
+
             <include layout="@layout/data_placeholder_layout" />
+
             <include layout="@layout/data_placeholder_layout" />
+
             <include layout="@layout/data_placeholder_layout" />
+
             <include layout="@layout/data_placeholder_layout" />
+
             <include layout="@layout/data_placeholder_layout" />
         </LinearLayout>
 
     </com.facebook.shimmer.ShimmerFrameLayout>
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/parent_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/padding_8"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:itemCount="10"
-        tools:listitem="@layout/pop_repo_row_item" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

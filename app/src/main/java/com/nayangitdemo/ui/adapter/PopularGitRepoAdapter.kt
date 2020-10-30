@@ -38,14 +38,14 @@ class PopularGitRepoAdapter(private val items: List<Item>, private val listener:
                     .error(R.mipmap.ic_launcher)
                     .fallback(R.mipmap.ic_launcher)
                     .into(itemView.iv_user_avtar)
-                txt_issue_title.text = item.full_name
-                txt_issue.text = item.owner.organizations_url
+                txt_repo_owner.text = item.full_name
+                txt_repo_url.text = item.owner.organizations_url
             }
 
             view.setOnClickListener {
                 val userName: List<String> = item.owner.url.split("/")
-                Log.d("item.owner.url",userName.last())
-                listener.onRepoDetailClick(item.description,userName.last())
+                Log.d("item.owner.url", userName.last())
+                listener.onRepoDetailClick(item.description, userName.last())
             }
         }
     }

@@ -7,4 +7,5 @@
     <string name="error_unauthorized">User Not Authorised</string>
     <string name="error_server">Something went wrong. Please try later</string>
     <string name="repository_description">Repository Description:</string>
+    <string name="view_repository_detail">Repository Detail</string>
 </resources>
