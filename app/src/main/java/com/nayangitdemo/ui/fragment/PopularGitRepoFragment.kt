@@ -22,18 +22,7 @@ class PopularGitRepoFragment : AbstractPopRepoFragment(), IAdapterCallback {
         }
     }
 
-    private val linearLayoutManager: LinearLayoutManager by lazy {
-        LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-    }
-
-
-    private val endlessScrollListener = object : EndlessScrollListener(linearLayoutManager) {
-        override fun onLoadMore(currentPage: Int, totalItemCount: Int) {
-            getMorePopdata("$currentPage")
-
-        }
-    }
-
+    private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var fragmentChangeListener: IFragmentChangeCallback
 
     private val popularGitRepoList by lazy { ArrayList<Item>() }
@@ -50,6 +39,7 @@ class PopularGitRepoFragment : AbstractPopRepoFragment(), IAdapterCallback {
 
     override fun viewInitialization(view: View) {
         super.viewInitialization(view)
+        linearLayoutManager=  LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         initAdapter()
     }
 
@@ -57,7 +47,14 @@ class PopularGitRepoFragment : AbstractPopRepoFragment(), IAdapterCallback {
         with(parent_recycler) {
             layoutManager = linearLayoutManager
             adapter = popularGitRepoAdapter
-            addOnScrollListener(endlessScrollListener)
+            addOnScrollListener(object : EndlessScrollListener(linearLayoutManager) {
+                override fun onLoadMore(currentPage: Int, totalItemCount: Int) {
+                    getMorePopdata("$currentPage")
+
+                }
+            }
+
+            )
         }
     }
 

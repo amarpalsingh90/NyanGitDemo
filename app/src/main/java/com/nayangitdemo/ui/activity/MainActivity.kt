@@ -9,14 +9,15 @@ import com.nayangitdemo.ui.fragment.PopularGitRepoFragment
 
 class MainActivity : BaseActivity(), IFragmentChangeCallback {
 
+
     override fun getLayoutRes() = R.layout.activity_main
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        openIssueFragment()
+        openPopularGitRepo()
     }
 
-    private fun openIssueFragment() {
+    private fun openPopularGitRepo() {
         replaceFragment(
             R.id.container,
             PopularGitRepoFragment.newInstance(),
@@ -28,4 +29,5 @@ class MainActivity : BaseActivity(), IFragmentChangeCallback {
     override fun onFragmentChange(fragment: Fragment, tag: String) {
         replaceFragment(R.id.container, fragment, tag, true)
     }
+
 }

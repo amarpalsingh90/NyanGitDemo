@@ -1,12 +1,15 @@
 package com.nayangitdemo.base
 
 import android.os.Bundle
-import dagger.android.AndroidInjection
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import dagger.android.AndroidInjection
 import dagger.android.support.DaggerAppCompatActivity
 
 
 abstract class BaseActivity : DaggerAppCompatActivity() {
+    var manager: FragmentManager = supportFragmentManager
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -20,14 +23,13 @@ abstract class BaseActivity : DaggerAppCompatActivity() {
         tag: String,
         addToBackStack: Boolean = false
     ) {
-
         if (addToBackStack) {
-            supportFragmentManager.beginTransaction()
+            manager.beginTransaction()
                 .replace(container, fragment, tag)
                 .addToBackStack(tag)
                 .commit()
         } else {
-            supportFragmentManager.beginTransaction()
+            manager.beginTransaction()
                 .replace(container, fragment, tag)
                 .commit()
         }
